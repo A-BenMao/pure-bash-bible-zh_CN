@@ -1,0 +1,452 @@
+#字符串
+
+##删除字符串前后空格
+
+这是`sed`，`awk`，`perl`和其他工具的替代品。下面的函数通过查找所有头尾空格并在字符串的开头和结尾删除它来实现这一功能。
+
+ `：`内置用于代替临时变量。
+
+**示例函数:**
+
+```sh
+trim_string() {
+    # Usage: trim_string "   example   string    "
+    : "${1#"${1%%[![:space:]]*}"}"
+    : "${_%"${_##*[![:space:]]}"}"
+    printf '%s\n' "$_"
+}
+```
+
+**用法示例:**
+
+```shell
+$ trim_string "    Hello,  World    "
+Hello,  World
+
+$ name="   John Black  "
+$ trim_string "$name"
+John Black
+```
+
+
+##删除字符串中的所有的空白并用空格分割单词
+
+这是`sed`，`awk`，`perl`和其他工具的替代品。
+下面的函数通过重复使用单词拆分来创建一个没有前导/尾随空格的新字符串，并用空格分割字符串中的单词。
+
+**示例函数:**
+
+```sh
+# shellcheck disable=SC2086,SC2048
+trim_all() {
+    # Usage: trim_all "   example   string    "
+    set -f
+    set -- $*
+    printf '%s\n' "$*"
+    set +f
+}
+```
+
+**用法示例:**
+
+```shell
+$ trim_all "    Hello,    World    "
+Hello, World
+
+$ name="   John   Black  is     my    name.    "
+$ trim_all "$name"
+John Black is my name.
+```
+
+##在字符串上匹配正则表达式
+
+ 对于使用`sed`的大部分情况，`bash`的正则表达式匹配结果完全可以替代。
+
+**警告**: 这是少数平台相关的“bash”功能之一。
+`bash`将使用用户系统上安装的任何正则表达式引擎。
+如果要兼容，请坚持使用符合POSIX规范的正则表达式引擎。
+绝大部分发行版Linux中的bash均实现了POSIX规范。
+
+**警告**: 此示例仅打印第一个匹配组。 使用时多个匹配组需要进行一些修改。
+
+**示例函数:**
+
+```sh
+regex() {
+    # Usage: regex "string" "regex"
+    [[ $1 =~ $2 ]] && printf '%s\n' "${BASH_REMATCH[1]}"
+}
+```
+
+**用法示例:**
+
+```shell
+$ # 删除开头的空白字符.
+$ regex '    hello' '^\s*(.*)'
+hello
+
+$ # 验证十六进制颜色.
+$ regex "#FFFFFF" '^(#?([a-fA-F0-9]{6}|[a-fA-F0-9]{3}))$'
+#FFFFFF
+
+$ # 验证十六进制颜色（无效）.
+$ regex "red" '^(#?([a-fA-F0-9]{6}|[a-fA-F0-9]{3}))$'
+# no output (invalid)
+```
+
+**在脚本中的示例:**
+
+```shell
+is_hex_color() {
+    if [[ $1 =~ ^(#?([a-fA-F0-9]{6}|[a-fA-F0-9]{3}))$ ]]; then
+        printf '%s\n' "${BASH_REMATCH[1]}"
+    else
+        printf '%s\n' "error: $1 is an invalid color."
+        return 1
+    fi
+}
+
+read -r color
+is_hex_color "$color" || color="#FFFFFF"
+
+# Do stuff.
+```
+
+
+##指定分隔符拆分字符串
+
+**警告:** 需要`bash` 4+以上的版本
+
+这是`cut`，`awk`和其他工具的替代品。
+
+**示例函数:**
+
+```sh
+split() {
+   # Usage: split "string" "delimiter"
+   IFS=$'\n' read -d "" -ra arr <<< "${1//$2/$'\n'}"
+   printf '%s\n' "${arr[@]}"
+}
+```
+
+**示例用法:**
+
+```shell
+$ split "apples,oranges,pears,grapes" ","
+apples
+oranges
+pears
+grapes
+
+$ split "1, 2, 3, 4, 5" ", "
+1
+2
+3
+4
+5
+
+# 多字符分隔符也可以工作！
+$ split "hello---world---my---name---is---john" "---"
+hello
+world
+my
+name
+is
+john
+```
+
+##将字符串转换为小写
+
+**警告:** 需要`bash` 4+以上的版本
+
+**示例函数:**
+
+```sh
+lower() {
+    # Usage: lower "string"
+    printf '%s\n' "${1,,}"
+}
+```
+
+**示例用法:**
+
+```shell
+$ lower "HELLO"
+hello
+
+$ lower "HeLlO"
+hello
+
+$ lower "hello"
+hello
+```
+
+##将字符串转换为大写
+
+**警告:** 需要`bash` 4+以上的版本
+
+**示例函数:**
+
+```sh
+upper() {
+    # Usage: upper "string"
+    printf '%s\n' "${1^^}"
+}
+```
+
+**示例用法:**
+
+```shell
+$ upper "hello"
+HELLO
+
+$ upper "HeLlO"
+HELLO
+
+$ upper "HELLO"
+HELLO
+```
+
+##反转字符串大小写
+
+**警告:** 需要`bash` 4+以上的版本
+
+**示例函数:**
+
+```sh
+reverse_case() {
+    # Usage: reverse_case "string"
+    printf '%s\n' "${1~~}"
+}
+```
+
+**示例用法:**
+
+```shell
+$ reverse_case "hello"
+HELLO
+
+$ reverse_case "HeLlO"
+hElLo
+
+$ reverse_case "HELLO"
+hello
+```
+
+##删除字符串中的引号
+
+**示例函数:**
+
+```sh
+trim_quotes() {
+    # Usage: trim_quotes "string"
+    : "${1//\'}"
+    printf '%s\n' "${_//\"}"
+}
+```
+
+**示例用法:**
+
+```shell
+$ var="'Hello', \"World\""
+$ trim_quotes "$var"
+Hello, World
+```
+
+##从字符串中删除所有正则实例
+
+**示例函数:**
+
+```sh
+strip_all() {
+    # Usage: strip_all "string" "pattern"
+    printf '%s\n' "${1//$2}"
+}
+```
+
+**示例用法:**
+
+```shell
+$ strip_all "The Quick Brown Fox" "[aeiou]"
+Th Qck Brwn Fx
+
+$ strip_all "The Quick Brown Fox" "[[:space:]]"
+TheQuickBrownFox
+
+$ strip_all "The Quick Brown Fox" "Quick "
+The Brown Fox
+```
+
+##从字符串中删除第一次出现的正则实例
+
+**示例函数:**
+
+```sh
+strip() {
+    # Usage: strip "string" "pattern"
+    printf '%s\n' "${1/$2}"
+}
+```
+
+**示例用法:**
+
+```shell
+$ strip "The Quick Brown Fox" "[aeiou]"
+Th Quick Brown Fox
+
+$ strip "The Quick Brown Fox" "[[:space:]]"
+TheQuick Brown Fox
+```
+
+##在字符串开头匹配正则并删除
+
+**示例函数:**
+
+```sh
+lstrip() {
+    # Usage: lstrip "string" "pattern"
+    printf '%s\n' "${1##$2}"
+}
+```
+
+**示例用法:**
+
+```shell
+$ lstrip "The Quick Brown Fox" "The "
+Quick Brown Fox
+```
+
+##在字符串末尾匹配正则并删除
+
+**示例函数:**
+
+```sh
+rstrip() {
+    # Usage: rstrip "string" "pattern"
+    printf '%s\n' "${1%%$2}"
+}
+```
+
+**示例用法:**
+
+```shell
+$ rstrip "The Quick Brown Fox" " Fox"
+The Quick Brown
+```
+
+##百分号编码字符串
+
+**示例函数:**
+
+```sh
+urlencode() {
+    # Usage: urlencode "string"
+    local LC_ALL=C
+    for (( i = 0; i < ${#1}; i++ )); do
+        : "${1:i:1}"
+        case "$_" in
+            [a-zA-Z0-9.~_-])
+                printf '%s' "$_"
+            ;;
+
+            *)
+                printf '%%%02X' "'$_"
+            ;;
+        esac
+    done
+    printf '\n'
+}
+```
+
+**示例用法:**
+
+```shell
+$ urlencode "https://github.com/dylanaraps/pure-bash-bible"
+https%3A%2F%2Fgithub.com%2Fdylanaraps%2Fpure-bash-bible
+```
+
+##解码用百分比编码的字符串
+
+**示例函数:**
+
+```sh
+urldecode() {
+    # Usage: urldecode "string"
+    : "${1//+/ }"
+    printf '%b\n' "${_//%/\\x}"
+}
+```
+
+**示例用法:**
+
+```shell
+$ urldecode "https%3A%2F%2Fgithub.com%2Fdylanaraps%2Fpure-bash-bible"
+https://github.com/dylanaraps/pure-bash-bible
+```
+
+##检查字符串是否包含子字符串
+
+**用于测试:**
+
+```shell
+if [[ $var == *sub_string* ]]; then
+    printf '%s\n' "sub_string is in var."
+fi
+
+# 反转 (子串不在字符串中).
+if [[ $var != *sub_string* ]]; then
+    printf '%s\n' "sub_string is not in var."
+fi
+
+# 也可以在数组中运行
+if [[ ${arr[*]} == *sub_string* ]]; then
+    printf '%s\n' "sub_string is in array."
+fi
+```
+
+**使用case语句:**
+
+```shell
+case "$var" in
+    *sub_string*)
+        # Do stuff
+    ;;
+
+    *sub_string2*)
+        # Do more stuff
+    ;;
+
+    *)
+        # Else
+    ;;
+esac
+```
+
+##检查字符串是否以子字符串开头
+
+```shell
+if [[ $var == sub_string* ]]; then
+    printf '%s\n' "var starts with sub_string."
+fi
+
+# 反转 (变量不是以子串开头).
+if [[ $var != sub_string* ]]; then
+    printf '%s\n' "var does not start with sub_string."
+fi
+```
+
+##检查字符串是否以子字符串结尾
+
+```shell
+if [[ $var == *sub_string ]]; then
+    printf '%s\n' "var ends with sub_string."
+fi
+
+# Inverse (var does not end with sub_string).
+if [[ $var != *sub_string ]]; then
+    printf '%s\n' "var does not end with sub_string."
+fi
+```
+
+<!-- CHAPTER END -->
+

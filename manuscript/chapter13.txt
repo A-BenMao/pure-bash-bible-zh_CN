@@ -1,0 +1,43 @@
+#trap命令
+
+Traps允许脚本在各种信号上执行代码。在 [pxltrm](https://github.com/dylanaraps/pxltrm) (*用bash编写的像素艺术编辑器*)  traps 用于在窗口大小调整时重绘用户界面。另一个用例是在脚本退出时清理临时文件。
+
+Traps应该在脚本开头附近添加，以便捕获任何早期错误.
+
+**NOTE:** 有关信号的完整列表，请参阅 `trap -l`.
+
+
+##在脚本退出时执行操作
+
+```shell
+# 脚本退出时清除屏幕。
+trap 'printf \\e[2J\\e[H\\e[m' EXIT
+```
+
+##忽略终端中断（CTRL+C，SIGINT）
+
+```shell
+trap '' INT
+```
+
+##对窗口调整大小时做出反应
+
+```shell
+# 在窗口调整大小时调用函数.
+trap 'code_here' SIGWINCH
+```
+
+##在命令之前执行某些操作
+
+```shell
+trap 'code_here' DEBUG
+```
+
+##在shell函数或源文件完成执行时执行某些操作
+
+```shell
+trap 'code_here' RETURN
+```
+
+<!-- CHAPTER END -->
+

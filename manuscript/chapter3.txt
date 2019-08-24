@@ -1,0 +1,97 @@
+#循环
+
+##循环生成范围内的数字
+
+替代`seq`.
+
+```shell
+# Loop from 0-100 (no variable support).
+for i in {0..100}; do
+    printf '%s\n' "$i"
+done
+```
+
+##循环遍历可变数字范围
+
+替代 `seq`.
+
+```shell
+# Loop from 0-VAR.
+VAR=50
+for ((i=0;i<=VAR;i++)); do
+    printf '%s\n' "$i"
+done
+```
+
+##循环数组
+
+```shell
+arr=(apples oranges tomatoes)
+
+# Just elements.
+for element in "${arr[@]}"; do
+    printf '%s\n' "$element"
+done
+```
+
+##循环输出带索引的数组
+
+```shell
+arr=(apples oranges tomatoes)
+
+# 元素和索引.
+for i in "${!arr[@]}"; do
+	printf '%s %s\n' "$i ${arr[i]}"
+done
+
+# 替代方法.
+for ((i=0;i<${#arr[@]};i++)); do
+    printf '%s %s\n' "$i ${arr[i]}"
+done
+```
+
+##循环遍历文件的内容
+
+```shell
+while read -r line; do
+    printf '%s\n' "$line"
+done < "file"
+```
+
+##循环遍历文件和目录
+
+
+不要 `ls`.
+
+```shell
+# 遍历当前目录下的文件和目录.
+for file in *; do
+    printf '%s\n' "$file"
+done
+
+# 遍历目录中的png图片.
+for file in ~/Pictures/*.png; do
+    printf '%s\n' "$file"
+done
+
+# 迭代输出目录.
+for dir in ~/Downloads/*/; do
+    printf '%s\n' "$dir"
+done
+
+# 支持扩展.
+for file in /path/to/parentdir/{file1,file2,subdir/file3}; do
+    printf '%s\n' "$file"
+done
+
+# 递归迭代，输出子目录下的所有文件.
+# 
+shopt -s globstar
+for file in ~/Pictures/**/*; do
+    printf '%s\n' "$file"
+done
+shopt -u globstar
+```
+globstar是Bash 4.0才引入的选项，当设置启用globstar(shopt -s globstar)时，两个星号意为对通配符进行展开就可以匹配任何当前目录(包括子目录)以及其的文件；若不启用globstar(shopt -u globstar)，两个星号通配符的作用和一个星号通配符是相同的。
+<!-- CHAPTER END -->
+

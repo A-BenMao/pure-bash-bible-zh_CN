@@ -1,0 +1,42 @@
+#花括号展开
+
+##范围
+
+```shell
+# 符号: {<START>..<END>}
+
+# 打印 1-100 之间的数字.
+echo {1..100}
+
+# 打印一个范围内的浮点数.
+echo 1.{1..9}
+
+# 打印a-z间的字符.
+echo {a..z}
+echo {A..Z}
+
+# 嵌套.
+echo {A..Z}{0..9}
+
+# 打印用零填充的数字.
+# 警告: bash 4+
+echo {01..100}
+
+# 更改步长.
+# 符号: {<START>..<END>..<INCREMENT>}
+# 警告: bash 4+
+echo {1..10..2} # 每次增加2.
+```
+
+##字符串列表
+
+```shell
+echo {apples,oranges,pears,grapes}
+
+# 示例用法:
+# 删除~/Downloads/目录下的 Movies, Music 和 ISOS 文件夹 .
+rm -rf ~/Downloads/{Movies,Music,ISOS}
+```
+
+<!-- CHAPTER END -->
+

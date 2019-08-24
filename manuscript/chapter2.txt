@@ -1,0 +1,129 @@
+#数组
+
+##反转数组
+
+启用`extdebug`允许访问`BASH_ARGV`数组，该数组反向存储当前函数的参数
+
+**示例函数:**
+
+```sh
+reverse_array() {
+    # Usage: reverse_array "array"
+    shopt -s extdebug
+    f()(printf '%s\n' "${BASH_ARGV[@]}"); f "$@"
+    shopt -u extdebug
+}
+```
+
+**示例用法:**
+
+```shell
+$ reverse_array 1 2 3 4 5
+5
+4
+3
+2
+1
+
+$ arr=(red blue green)
+$ reverse_array "${arr[@]}"
+green
+blue
+red
+```
+
+##删除重复的数组元素
+
+创建临时关联数组。设置关联数组值并发生重复赋值时，bash会覆盖该键。这允许我们有效地删除数组重复。
+
+**警告:** 版本要求 `bash` 4+
+
+**示例函数:**
+
+```sh
+remove_array_dups() {
+    # Usage: remove_array_dups "array"
+    declare -A tmp_array
+
+    for i in "$@"; do
+        [[ $i ]] && IFS=" " tmp_array["${i:- }"]=1
+    done
+
+    printf '%s\n' "${!tmp_array[@]}"
+}
+```
+
+**示例用法:**
+
+```shell
+$ remove_array_dups 1 1 2 2 3 3 3 3 3 4 4 4 4 4 5 5 5 5 5 5
+1
+2
+3
+4
+5
+
+$ arr=(red red green blue blue)
+$ remove_array_dups "${arr[@]}"
+red
+green
+blue
+```
+
+##随机返回一个数组元素
+
+**示例函数:**
+
+```sh
+random_array_element() {
+    # Usage: random_array_element "array"
+    local arr=("$@")
+    printf '%s\n' "${arr[RANDOM % $#]}"
+}
+```
+bash的SHELL参数RANDOM可以生成0-32767的随机数
+想设定从1到N的随机数范围的话，可以使用：
+$ ( ( (RANDOM % n) + 1 ))
+
+**示例用法:**
+
+```shell
+$ array=(red green blue yellow brown)
+$ random_array_element "${array[@]}"
+yellow
+
+# Multiple arguments can also be passed.
+$ random_array_element 1 2 3 4 5 6 7
+3
+```
+
+##循环迭代一个数组
+
+每次`printf`调用时，都会打印下一个数组元素。当打印到达最后一个数组元素时，它再次从第一个元素开始。
+
+```sh
+arr=(a b c d)
+
+cycle() {
+    printf '%s ' "${arr[${i:=0}]}"
+    ((i=i>=${#arr[@]}-1?0:++i))
+}
+```
+
+
+##在两个值之间转换
+
+这与上面的工作方式相同，这只是一个不同的用例。
+
+
+```sh
+arr=(true false)
+
+cycle() {
+    printf '%s ' "${arr[${i:=0}]}"
+    ((i=i>=${#arr[@]}-1?0:++i))
+}
+```
+
+<!-- CHAPTER END -->
+

@@ -1,0 +1,40 @@
+#变量
+
+##分配和访问一个变量
+
+```shell
+$ hello_world="value"
+
+# 创建一个变量名.
+$ var="world"
+$ ref="hello_$var"
+
+# 打印存储为 'hello_$var' 变量名称的值.
+$ printf '%s\n' "${!ref}"
+value
+```
+
+或者, 在 `bash` 4.3+以上版本:
+
+```shell
+$ hello_world="value"
+$ var="world"
+
+# 声明一个名称引用.
+$ declare -n ref=hello_$var
+
+$ printf '%s\n' "$ref"
+value
+```
+
+##根据另一个变量命名变量
+
+```shell
+$ var="world"
+$ declare "hello_$var=value"
+$ printf '%s\n' "$hello_world"
+value
+```
+
+<!-- CHAPTER END -->
+

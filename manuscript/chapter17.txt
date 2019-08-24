@@ -1,0 +1,78 @@
+#有关终端的信息
+
+##获取终端的总行列数（*来自脚本*）
+
+在纯bash中编写脚本和`stty`/`tput`无法调用时，这很方便。
+
+**示例函数:**
+
+```sh
+get_term_size() {
+    # 用法: get_term_size
+
+    # (:;:) 是一个短暂暂停，以确保变量立即导出
+    shopt -s checkwinsize; (:;:)
+    printf '%s\n' "$LINES $COLUMNS"
+}
+```
+
+**示例用法:**
+
+```shell
+# 输出: 行数 列数
+$ get_term_size
+15 55
+```
+
+##获取终端的像素大小
+
+**警告**: 这在某些终端仿真器中不起作用。
+
+**示例函数:**
+
+```sh
+get_window_size() {
+    # 用法: get_window_size
+    printf '%b' "${TMUX:+\\ePtmux;\\e}\\e[14t${TMUX:+\\e\\\\}"
+    IFS=';t' read -d t -t 0.05 -sra term_size
+    printf '%s\n' "${term_size[1]}x${term_size[2]}"
+}
+```
+
+**示例用法:**
+
+```shell
+# 输出: 长度x高度
+$ get_window_size
+1200x800
+
+# 输出 (失败):
+$ get_window_size
+x
+```
+
+##获取当前光标位置
+
+用纯bash创建TUI时，是很有用的。
+TUI是指文本用户界面(Text-based User Interface)，通过文本实现交互窗口展示内容，定位光标和鼠标实现用户交互。
+
+**示例函数:**
+
+```sh
+get_cursor_pos() {
+    # 用法: get_cursor_pos
+    IFS='[;' read -p $'\e[6n' -d R -rs _ y x _
+    printf '%s\n' "$x $y"
+}
+```
+
+**示例用法:**
+
+```shell
+# Output: X Y
+$ get_cursor_pos
+1 8
+```
+
+<!-- CHAPTER END -->
+

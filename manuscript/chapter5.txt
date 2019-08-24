@@ -1,0 +1,52 @@
+#文件路径
+
+##获取文件路径的目录名
+
+替代 `dirname` 命令.
+
+**示例函数:**
+
+```sh
+dirname() {
+    # 用法: dirname "path"
+    printf '%s\n' "${1%/*}/"
+}
+```
+
+**示例用法:**
+
+```shell
+$ dirname ~/Pictures/Wallpapers/1.jpg
+/home/black/Pictures/Wallpapers/
+
+$ dirname ~/Pictures/Downloads/
+/home/black/Pictures/
+```
+
+##获取文件路径的基本名称
+
+
+替代 `basename` 命令.
+
+**示例函数:**
+
+```sh
+basename() {
+    # Usage: basename "path"
+    : "${1%/}"
+    printf '%s\n' "${_##*/}"
+}
+```
+
+**示例用法:**
+
+```shell
+$ basename ~/Pictures/Wallpapers/1.jpg
+1.jpg
+
+$ basename ~/Pictures/Downloads/
+Downloads
+```
+
+<!-- CHAPTER END -->
+

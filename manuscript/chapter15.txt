@@ -1,0 +1,52 @@
+#已过时的语法
+
+##释伴声明
+
+使用 `#!/usr/bin/env bash` 而不是 `#!/bin/bash`.
+
+- 前者搜索用户的 `PATH` 以查找 `bash` 二进制文件.
+- 后者假设它始终安装在 `/bin/` 目录，可能导致问题.
+
+```shell
+# 正确的方式:
+
+    #!/usr/bin/env bash
+
+# 错误的方式:
+
+    #!/bin/bash
+```
+
+##命令替换
+
+使用 `$()`而不是 `` ` ` ``.
+
+```shell
+# 正确的方式.
+var="$(command)"
+
+# 错误的方式.
+var=`command`
+
+# $() 很容易嵌套，而``不能.
+var="$(command "$(command)")"
+```
+
+##声明函数
+
+不要使用`function`关键字，它会降低与旧版本`bash`的兼容性.
+
+```shell
+# 正确的方式.
+do_something() {
+    # ...
+}
+
+# 错误的方式.
+function do_something() {
+    # ...
+}
+```
+
+<!-- CHAPTER END -->
+

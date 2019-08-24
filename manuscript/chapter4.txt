@@ -1,0 +1,192 @@
+#文本处理
+
+**警告:** `bash`在小于`<4.4`的版本中不能正确处理二进制数据.
+
+##读取文件到一个字符串中
+
+替代 `cat` 命令.
+
+```shell
+file_data="$(<"file")"
+```
+
+##读取文件到一个数组中 (*按行读取*)
+
+替代 `cat` 命令.
+
+```shell
+# Bash <4
+IFS=$'\n' read -d "" -ra file_data < "file"
+
+# Bash 4+
+mapfile -t file_data < "file"
+```
+
+##获取文件的前N行
+
+替代 `head` 命令.
+
+**警告:** 版本要求 `bash` 4+
+
+**示例函数:**
+
+```sh
+head() {
+    # Usage: head "n" "file"
+    mapfile -tn "$1" line < "$2"
+    printf '%s\n' "${line[@]}"
+}
+```
+
+**示例用法:**
+
+```shell
+$ head 2 ~/.bashrc
+# Prompt
+PS1='➜ '
+
+$ head 1 ~/.bashrc
+# Prompt
+```
+
+##获取文件的最后N行
+
+替代 `tail` 命令.
+
+**警告:** 版本要求 `bash` 4+
+
+**示例函数:**
+
+```sh
+tail() {
+    # Usage: tail "n" "file"
+    mapfile -tn 0 line < "$2"
+    printf '%s\n' "${line[@]: -$1}"
+}
+```
+
+**示例用法:**
+
+```shell
+$ tail 2 ~/.bashrc
+# Enable tmux.
+# [[ -z "$TMUX"  ]] && exec tmux
+
+$ tail 1 ~/.bashrc
+# [[ -z "$TMUX"  ]] && exec tmux
+```
+
+##获取文件中的行数
+
+
+替代 `wc -l`.
+
+**示例函数 (bash 4):**
+
+```sh
+lines() {
+    # Usage: lines "file"
+    mapfile -tn 0 lines < "$1"
+    printf '%s\n' "${#lines[@]}"
+}
+```
+
+**示例函数 (bash 3):**
+
+这个方法比`mapfile`方法使用更少的内存，并且在`bash` 3中工作，但对于更大的文件来说它更慢。
+
+```sh
+lines_loop() {
+    # Usage: lines_loop "file"
+    count=0
+    while IFS= read -r _; do
+        ((count++))
+    done < "$1"
+    printf '%s\n' "$count"
+}
+```
+
+**示例用法:**
+
+```shell
+$ lines ~/.bashrc
+48
+
+$ lines_loop ~/.bashrc
+48
+```
+
+##计算目录中的文件或目录
+
+
+这是通过将glob的输出传递给函数然后计算参数的数量来实现的。
+
+
+
+**示例函数:**
+
+```sh
+count() {
+    # Usage: count /path/to/dir/*
+    #        count /path/to/dir/*/
+    printf '%s\n' "$#"
+}
+```
+
+**示例用法:**
+
+```shell
+# Count all files in dir.
+$ count ~/Downloads/*
+232
+
+# Count all dirs in dir.
+$ count ~/Downloads/*/
+45
+
+# Count all jpg files in dir.
+$ count ~/Pictures/*.jpg
+64
+```
+
+##创建一个空文件
+
+替代 `touch`.
+
+```shell
+# 简短的方式.
+>file
+
+# 更长的替代品:
+:>file
+echo -n >file
+printf '' >file
+```
+
+##提取两个标记之间的行
+
+**示例函数:**
+
+```sh
+extract() {
+    # 用法: extract file "opening marker" "closing marker"
+    while IFS=$'\n' read -r line; do
+        [[ $extract && $line != "$3" ]] &&
+            printf '%s\n' "$line"
+
+        [[ $line == "$2" ]] && extract=1
+        [[ $line == "$3" ]] && extract=
+    done < "$1"
+}
+```
+
+**示例用法:**
+
+```shell
+# 从MarkDown文件中提取代码块.
+$ extract ~/projects/pure-bash/README.md '```sh' '```'
+# Output here...
+```
+
+<!-- CHAPTER END -->
+

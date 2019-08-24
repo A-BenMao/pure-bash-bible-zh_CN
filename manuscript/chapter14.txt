@@ -1,0 +1,14 @@
+#性能
+
+##禁用Unicode码
+
+如果不需要unicode，则可以禁用它以提高性能。结果可能会有所不同，但是[neofetch](https://github.com/dylanaraps/neofetch) 和其他程序有明显改善。
+
+```shell
+# 禁用 unicode.
+LC_ALL=C
+LANG=C
+```
+
+<!-- CHAPTER END -->
+

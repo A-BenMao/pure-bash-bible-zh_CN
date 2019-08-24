@@ -1,0 +1,152 @@
+#转换
+
+##将十六进制颜色转换为RGB
+
+**示例函数:**
+
+```sh
+hex_to_rgb() {
+    # Usage: hex_to_rgb "#FFFFFF"
+    #        hex_to_rgb "000000"
+    : "${1/\#}"
+    ((r=16#${_:0:2},g=16#${_:2:2},b=16#${_:4:2}))
+    printf '%s\n' "$r $g $b"
+}
+```
+
+**示例用法:**
+
+```shell
+$ hex_to_rgb "#FFFFFF"
+255 255 255
+```
+
+
+##将RGB颜色转换为十六进制
+
+**示例函数:**
+
+```sh
+rgb_to_hex() {
+    # Usage: rgb_to_hex "r" "g" "b"
+    printf '#%02x%02x%02x\n' "$1" "$2" "$3"
+}
+```
+
+**示例用法:**
+
+```shell
+$ rgb_to_hex "255" "255" "255"
+#FFFFFF
+```
+
+
+# 代码高尔夫
+
+[CODE GOLF](https://en.wikipedia.org/wiki/Code_golf)，看看谁写的代码最短！
+
+
+##更短的`for`循环语法
+
+```shell
+# Tiny C风格.
+for((;i++<10;)){ echo "$i";}
+
+# 未记载的方法.
+for i in {1..10};{ echo "$i";}
+
+# 扩展.
+for i in {1..10}; do echo "$i"; done
+
+# C语言风格.
+for((i=0;i<=10;i++)); do echo "$i"; done
+```
+
+##更短的无限循环
+
+```shell
+# 普通方法
+while :; do echo hi; done
+
+# 更短的方式
+for((;;)){ echo hi;}
+```
+
+##更短的函数声明
+
+```shell
+# 普通方法
+f(){ echo hi;}
+
+# 用于子shell
+f()(echo hi)
+
+# 用于四则运算
+# 这可以被用来分配整数值。
+# Example: f a=1
+#          f a++
+f()(($1))
+
+# 用作测试，循环等
+# NOTE: ‘while’, ‘until’, ‘case’, ‘(())’, ‘[[]]’ 也可以使用.
+f()if true; then echo "$1"; fi
+f()for i in "$@"; do echo "$i"; done
+```
+
+##更短的`if`语法
+
+```shell
+# 一行
+# Note: 当第一段是正确时执行第三段
+# Note: 此处利用了逻辑运算符的短路规则
+[[ $var == hello ]] && echo hi || echo bye
+[[ $var == hello ]] && { echo hi; echo there; } || echo bye
+
+# 多行（没有else，单条语句）
+# Note: 退出状态可能与if语句不同
+[[ $var == hello ]] &&
+    echo hi
+
+# 多行 (没有 else)
+[[ $var == hello ]] && {
+    echo hi
+    # ...
+}
+```
+
+##用`case`语句来更简单的设置变量
+
+内置的`：`可以用来避免在case语句中重复的实用`variable =`。 
+`$ _`变量存储最后一个命令的最后一个参数。
+ `：`总会成功，所以它可以用来存储变量值。
+
+```shell
+case "$OSTYPE" in
+    "darwin"*)
+        : "MacOS"
+    ;;
+
+    "linux"*)
+        : "Linux"
+    ;;
+
+    *"bsd"* | "dragonfly" | "bitrig")
+        : "BSD"
+    ;;
+
+    "cygwin" | "msys" | "win32")
+        : "Windows"
+    ;;
+
+    *)
+        printf '%s\n' "Unknown OS detected, aborting..." >&2
+        exit 1
+    ;;
+esac
+
+# 最后，获取变量值.
+os="$_"
+```
+
+<!-- CHAPTER END -->
+

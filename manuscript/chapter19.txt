@@ -1,0 +1,229 @@
+#其他
+
+##使用`read`作为`sleep`命令的替代品
+
+令人惊讶的是，`sleep`是一个外部命令而不是`bash`内置的。
+
+**警告:** 要求`bash`版本 4+
+
+**示例函数:**
+
+```sh
+read_sleep() {
+    # 用法: sleep 1
+    #        sleep 0.2
+    read -rt "$1" <> <(:) || :
+}
+```
+
+**示例用法:**
+
+```shell
+read_sleep 1
+read_sleep 0.1
+read_sleep 30
+```
+
+对于性能要求较高的情况下，打开和关闭过多的文件描述符是不实用的，对于`read`的所有调用，文件描述符的分配只能进行一次：:
+
+(请参阅最原始的功能实现 https://blog.dhampir.no/content/sleeping-without-a-subprocess-in-bash-and-how-to-sleep-forever)
+
+```shell
+exec {sleep_fd}<> <(:)
+while some_quick_test; do
+    # equivalent of sleep 0.001
+    read -t 0.001 -u $sleep_fd
+done
+```
+
+##检查一个命令是否在用户的PATH中
+
+```shell
+# 有3种方法可以使用，任何一种都正确。
+type -p executable_name &>/dev/null
+hash executable_name &>/dev/null
+command -v executable_name &>/dev/null
+
+# 用作检测.
+if type -p executable_name &>/dev/null; then
+    # Program is in PATH.
+fi
+
+# 反向检测.
+if ! type -p executable_name &>/dev/null; then
+    # Program is not in PATH.
+fi
+
+# 示例（如果未安装程序，则提前退出）.
+if ! type -p convert &>/dev/null; then
+    printf '%s\n' "error: convert is not installed, exiting..."
+    exit 1
+fi
+```
+
+##使用`strftime`获取当前日期
+
+Bash的`printf`有一个内置的获取日期的方法，可用来代替`date`命令。
+
+**警告:** 要求`bash`版本 4+
+
+**示例函数:**
+
+```sh
+date() {
+    # 用法: date "format"
+    printf "%($1)T\\n" "-1"
+}
+```
+- 了解时间格式: ['man strftime'](http://www.man7.org/linux/man-pages/man3/strftime.3.html) .
+
+**示例用法:**
+
+```shell
+# 使用上述函数.
+$ date "%a %d %b  - %l:%M %p"
+Fri 15 Jun  - 10:00 AM
+
+# 直接使用printf.
+$ printf '%(%a %d %b  - %l:%M %p)T\n' "-1"
+Fri 15 Jun  - 10:00 AM
+
+# 使用printf分配变量.
+$ printf -v date '%(%a %d %b  - %l:%M %p)T\n' '-1'
+$ printf '%s\n' "$date"
+Fri 15 Jun  - 10:00 AM
+```
+
+##获取当前用户的用户名
+
+**警告:** 要求`bash`版本 4.4+
+
+```shell
+$ : \\u
+# Expand the parameter as if it were a prompt string.
+$ printf '%s\n' "${_@P}"
+black
+```
+
+##生成一个V4版本的UUID
+
+**警告**: 生成的值不具有加密安全性。
+
+**示例函数:**
+
+```sh
+uuid() {
+    # 用法: uuid
+    C="89ab"
+
+    for ((N=0;N<16;++N)); do
+        B="$((RANDOM%256))"
+
+        case "$N" in
+            6)  printf '4%x' "$((B%16))" ;;
+            8)  printf '%c%x' "${C:$RANDOM%${#C}:1}" "$((B%16))" ;;
+
+            3|5|7|9)
+                printf '%02x-' "$B"
+            ;;
+
+            *)
+                printf '%02x' "$B"
+            ;;
+        esac
+    done
+
+    printf '\n'
+}
+```
+
+**示例用法:**
+
+```shell
+$ uuid
+d5b6c731-1310-4c24-9fe3-55d556d44374
+```
+
+##进度条
+
+这是一种绘制进度条的简单方法，无需在函数本身中使用for循环。
+
+**示例函数:**
+
+```sh
+bar() {
+    # 用法: bar 1 10
+    #           ^----- 已经完成的百分比 (0-100).
+    #             ^--- 字符总长度.
+    ((elapsed=$1*$2/100))
+
+    # 创建空格表示的进度条
+    printf -v prog  "%${elapsed}s"
+    printf -v total "%$(($2-elapsed))s"
+
+    printf '%s\r' "[${prog// /-}${total}]"
+}
+```
+
+**示例用法:**
+
+```shell
+for ((i=0;i<=100;i++)); do
+    # 纯粹的暂停动作 (为了本例可以更好的演示).
+    (:;:) && (:;:) && (:;:) && (:;:) && (:;:)
+
+    # Print the bar.
+    bar "$i" "10"
+done
+
+printf '\n'
+```
+
+##获取脚本中的函数列表
+
+```sh
+get_functions() {
+    # Usage: get_functions
+    IFS=$'\n' read -d "" -ra functions < <(declare -F)
+    printf '%s\n' "${functions[@]//declare -f }"
+}
+```
+
+##绕过shell别名
+
+```shell
+# alias
+ls
+
+# command
+# shellcheck disable=SC1001
+\ls
+```
+
+##绕过shell函数
+
+```shell
+# function
+ls
+
+# command
+command ls
+```
+
+- command命令  调用指定的指令并执行，命令执行时不查询shell函数。command命令只能够执行shell内部的命令。
+
+##在后台运行命令
+
+这将运行给定命令并使其保持后台运行，即使终端或SSH连接中断后也是如此。但是会忽略所有输出。
+
+
+```sh
+bkr() {
+    (nohup "$@" &>/dev/null &)
+}
+
+bkr ./some_script.sh
+```
+
+<!-- CHAPTER END -->
+
