@@ -2,27 +2,23 @@
 <h1 align="center">pure bash bible</h1> <p
 align="center">bash奇巧淫技.</p>
 
-<p align="center"> <a
-href="https://travis-ci.com/dylanaraps/pure-bash-bible"><img
-src="https://travis-ci.com/dylanaraps/pure-bash-bible.svg?branch=master"></a>
-<a href="https://discord.gg/yfa5BDw"><img src="https://img.shields.io/discord/440354555197128704.svg"></a>
+<p align="center"> 
 <a href="./LICENSE.md"><img
 src="https://img.shields.io/badge/license-MIT-blue.svg"></a>
 </p>
 
 <br>
-
 <a href="https://leanpub.com/bash/">
 <img src="https://s3.amazonaws.com/titlepages.leanpub.com/bash/hero" width="40%" align="right">
 </a>
 
-本书原作者将书中的内容发布到了[github](https://github.com/dylanaraps/pure-bash-bible)上，我仅仅是翻译为中文，并解释了其中的部分语句语法，希望可以对今后的工作有所帮助。
+本书原作者将书中的内容发布到了[github](https://github.com/dylanaraps/pure-bash-bible)上，我仅仅是将其翻译为中文，并解释了其中的部分语句语法，希望可以对今后的工作有所帮助。
 
 # 以下是翻译后的原文 #
 
 这本书的目的是汇总只使用内置`bash`的特性来实现总所周知和鲜为人知的各项任务。 使用此参考书中的代码段可以帮助你从脚本中删除不需要的依赖项，并且在大多数情况下可以使它们运行的更快。 我偶然碰到了这些技巧并在开发[neofetch](https://github.com/dylanaraps/neofetch), [pxltrm](https://github.com/dylanaraps/pxltrm) 和一些其他小的项目的时候发现了一些别的技巧。
 
-下面的片段使用`shellcheck`进行了检查，并将测试写在了适用的地方。 想要贡献自己的代码? 阅读 [CONTRIBUTING.md](https://github.com/A-BenMao/pure-bash-bible-zh_CN/blob/master/CONTRIBUTING.md). 它概述了向参考书中增加片段时，单元测试的工作方式以及其他所需的内容。
+下面的片段使用`shellcheck`进行了检查，并将测试写在了适用的地方。 想要贡献自己的代码? 阅读 [CONTRIBUTING-Zh_CN.md](https://github.com/A-BenMao/pure-bash-bible-zh_CN/blob/master/CONTRIBUTING-Zh_CN.md). 它概述了向参考书中增加片段时，单元测试的工作方式以及其他所需的内容。
 
 看到了一些东西描述是不准确的、有缺陷的更或者是完全错误的？那么请新建一个issue或者发送一个pull request.如果参考书中缺少某些你想要的事物，也请新建一个issue并给出你能找到的解决方法。
 
@@ -628,7 +624,7 @@ fi
 <!-- CHAPTER END -->
 
 <!-- CHAPTER START -->
-#数组
+# 数组
 
 ## 反转数组
 
