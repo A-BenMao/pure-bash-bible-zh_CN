@@ -4,29 +4,29 @@
 ----------
 
 
-*   [1） 格式](#1)
-*   [1.1 Set](#1.1)
-*   [1.2 Reset](#1.2)
+*   [1） 格式](#格式)
+*   [1.1 Set](#Set)
+*   [1.2 Reset](#Reset)
 
 
-*   [2）8/16 Colors](#2)
-*   [2.1 前景（文字）](#2.1)
-*   [2.2 背景](#2.2)
+*   [2）8/16 Colors](#8/16Colors)
+*   [2.1 前景（文字）](#前景（文字）)
+*   [2.2 背景](#背景)
 
 
-*   [3）88/256 颜色](#3)
-*   [3.1 前景（文字）](#3.1)
-*   [3.2 背景色](#3.2)
+*   [3）88/256 颜色](#88/256颜色)
+*   [3.1 前景（文字）](#前景（文字）)
+*   [3.2 背景色](#背景色)
 
 
-*   [4）组合属性](#4)
+*   [4）组合属性](#组合属性)
 
-*   [5）终端兼容性](#5)
+*   [5）终端兼容性](#终端兼容性)
 
 
-*   [6）示例程序](#6)
-*   [6.1 Colors and formatting (16 colors)](#6.1)
-*   [6.2 256 colors](#6.2)
+*   [6）示例程序](#示例程序)
+*   [6.1 Colors and formatting (16 colors)](#Colors-and-formatting)
+*   [6.2 256 colors](#256-colors)
 
 
 ANSI/VT100 终端和终端仿真器不只是能够显示黑色和白色文本; 由于转义序列，它们可以显示颜色和格式化文本。
@@ -47,10 +47,10 @@ ANSI/VT100 终端和终端仿真器不只是能够显示黑色和白色文本; �
 > 2.  `\e[0m` 序列删除所有属性（格式和颜色）。在每个彩色文本的末尾添加它是个好主意.
 > 3.  本页中的示例使用 Bash，但`ANSI/VT100`转义序列可用于各种编程语言。
 
-# 1 格式
+# 格式
 -------------
 
-### 1.1 Set
+### Set
 
 | code | Description | Example | Preview |
 | --- | --- | --- | --- |
@@ -61,7 +61,7 @@ ANSI/VT100 终端和终端仿真器不只是能够显示黑色和白色文本; �
 | 7 | 反转（反转前景色和背景色） | `echo -e “Normal \e[7minverted”` | ![image](https://github.com/A-BenMao/pure-bash-bible-zh_CN/blob/master/images/console_codes_imgs/20190619134719632.png) |
 | 8 | 隐藏（对密码有用） | `echo -e “Normal \e[8mHidden”` | ![image](https://github.com/A-BenMao/pure-bash-bible-zh_CN/blob/master/images/console_codes_imgs/20190619134739654.png) |
 
-### 1.2 Reset
+### Reset
 
 | Code | Description | Example | Preview |
 | --- | --- | --- | --- |
@@ -73,10 +73,10 @@ ANSI/VT100 终端和终端仿真器不只是能够显示黑色和白色文本; �
 | 27 | 重置反显 | echo -e “Normal \e[7minverted \e[27mNormal” | ![image](https://github.com/A-BenMao/pure-bash-bible-zh_CN/blob/master/images/console_codes_imgs/20190619135900464.png) |
 | 28 | 重置隐藏 | echo -e “Normal \e[8mHidden \e[28mNormal” | ![image](https://github.com/A-BenMao/pure-bash-bible-zh_CN/blob/master/images/console_codes_imgs/20190619135931669.png) |
 
-# 2  8/16Colors
+# 8/16Colors
 -------------
 
-### 2.1 前景（文字）
+### 前景（文字）
 
 以下颜色适用于大多数终端和终端仿真器 2）， 请参阅兼容性列表以获取更多信息。
 
@@ -102,7 +102,7 @@ ANSI/VT100 终端和终端仿真器不只是能够显示黑色和白色文本; �
 | 96 | 浅青色 | echo -e “Default \e[96mLight cyan” | ![image](https://github.com/A-BenMao/pure-bash-bible-zh_CN/blob/master/images/console_codes_imgs/20190619141416743.png) |
 | 97 | 白色 | echo -e “Default \e[97mWhite” | ![image](https://github.com/A-BenMao/pure-bash-bible-zh_CN/blob/master/images/console_codes_imgs/20190619141425171.png) |
 
-### 2.2 背景
+### 背景
 
 | Code | Color | Example | Preview |
 | --- | --- | --- | --- |
@@ -124,7 +124,7 @@ ANSI/VT100 终端和终端仿真器不只是能够显示黑色和白色文本; �
 | 106 | 浅青色 | echo -e “Default \e[106mLight cyan” | ![image](https://github.com/A-BenMao/pure-bash-bible-zh_CN/blob/master/images/console_codes_imgs/20190619142015180.png) |
 | 107 | 白色 | echo -e “Default \e[107mWhite” | ![image](https://github.com/A-BenMao/pure-bash-bible-zh_CN/blob/master/images/console_codes_imgs/20190619142021305.png) |
 
-# 3 88/256颜色
+# 88/256颜色
 -----------
 
 某些终端（参见兼容性列表）可以支持 88 或 256 种颜色。以下是允许您使用它们的控制序列。
@@ -133,7 +133,7 @@ ANSI/VT100 终端和终端仿真器不只是能够显示黑色和白色文本; �
 
 注意 2：88 色终端（如 rxvt）与 256 色终端的颜色图不同。
 
-### 3.1 前景（文字）
+### 前景（文字）
 
 要使用前景中的 256 种颜色之一（文本颜色），控制序列为 “ `\e[38;5;`ColorNumber`m` ”，其中 ColorNumber 是以下颜色之一：  
 ![image](https://github.com/A-BenMao/pure-bash-bible-zh_CN/blob/master/images/console_codes_imgs/20190619142347178.png)  
@@ -155,7 +155,7 @@ for i in {16..21} {21..16} ; do echo -en "\e[38;5;${i}m#\e[0m" ; done ; echo
 
 ![image](https://github.com/A-BenMao/pure-bash-bible-zh_CN/blob/master/images/console_codes_imgs/20190619142540367.png)
 
-### 3.2 背景色
+### 背景色
 
 要在背景上使用 256 种颜色中的一种，控制序列为 “ `\e[48;5;`ColorNumber`m` ”，其中 ColorNumber 是以下颜色之一：  
 ![image](https://github.com/A-BenMao/pure-bash-bible-zh_CN/blob/master/images/console_codes_imgs/20190619142629366.png)  
@@ -177,7 +177,7 @@ for i in {16..21} {21..16} ; do echo -en "\e[48;5;${i}m \e[0m" ; done ; echo
 
 ![image](https://github.com/A-BenMao/pure-bash-bible-zh_CN/blob/master/images/console_codes_imgs/20190619142746703.png)
 
-4）组合属性
+### 组合属性
 ------
 
 终端允许属性组合。属性必须用分号（“;”）分隔。
@@ -187,7 +187,7 @@ for i in {16..21} {21..16} ; do echo -en "\e[48;5;${i}m \e[0m" ; done ; echo
 | Bold + Underlined | echo -e “\e[1;4mBold and Underlined” | ![image](https://github.com/A-BenMao/pure-bash-bible-zh_CN/blob/master/images/console_codes_imgs/20190619142956913.png) |
 | Bold + Red forground + Green background | echo -e “\e[1;31;42m Yes it is awful \e[0m” | ![image](https://github.com/A-BenMao/pure-bash-bible-zh_CN/blob/master/images/console_codes_imgs/20190619143007175.png) |
 
-5）终端兼容性
+### 终端兼容性
 -------
 
 ![image](https://github.com/A-BenMao/pure-bash-bible-zh_CN/blob/master/images/console_codes_imgs/2019061914310225.png)
@@ -197,10 +197,10 @@ for i in {16..21} {21..16} ; do echo -en "\e[48;5;${i}m \e[0m" ; done ; echo
 > “~”：终端以特殊方式支持。  
 > “-”：终端根本不支持。
 
-6）示例程序
+### 示例程序
 ------
 
-### 6.1 Colors and formatting (16 colors)
+### Colors-and-formatting
 
 以下 shell 脚本显示了许多可能的属性组合（但不是全部，因为它一次只使用一个格式属性）。
 
@@ -232,7 +232,7 @@ exit 0
 
 ![image](https://github.com/A-BenMao/pure-bash-bible-zh_CN/blob/master/images/console_codes_imgs/20190619143725445.png)
 
-### 6.2 256 colors
+### 256-colors
 
 以下脚本显示某些终端和终端仿真器（如 XTerm 和 GNOME Terminal）上可用的 256 种颜色。
 
