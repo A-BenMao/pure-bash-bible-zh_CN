@@ -2005,8 +2005,7 @@ Bash的`printf`有一个内置的获取日期的方法，可用来代替`date`�
 ```sh
 date() {
     # 用法: date "format"
-    # 通过 "man strftime"看格式
-		printf "%($1)T\\n" "-1"
+    printf "%($1)T\\n" "-1"
 }
 ```
 - 了解时间格式: ['man strftime'](http://www.man7.org/linux/man-pages/man3/strftime.3.html) .
