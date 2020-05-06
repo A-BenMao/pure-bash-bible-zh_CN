@@ -139,7 +139,7 @@ ANSI/VT100 终端和终端仿真器不只是能够显示黑色和白色文本; �
 ![image](https://github.com/A-BenMao/pure-bash-bible-zh_CN/blob/master/images/console_codes_imgs/20190619142347178.png)  
 **Example**:
 
-```
+```shell
 echo -e "\e[38;5;82mHello \e[38;5;198mWorld"
 
 
@@ -147,7 +147,7 @@ echo -e "\e[38;5;82mHello \e[38;5;198mWorld"
 
 ![image](https://github.com/A-BenMao/pure-bash-bible-zh_CN/blob/master/images/console_codes_imgs/20190619142534957.png)
 
-```
+```shell
 for i in {16..21} {21..16} ; do echo -en "\e[38;5;${i}m#\e[0m" ; done ; echo
 
 
@@ -161,7 +161,7 @@ for i in {16..21} {21..16} ; do echo -en "\e[38;5;${i}m#\e[0m" ; done ; echo
 ![image](https://github.com/A-BenMao/pure-bash-bible-zh_CN/blob/master/images/console_codes_imgs/20190619142629366.png)  
 **Example:**
 
-```
+```shell
 echo -e "\e[40;38;5;82m Hello \e[30;48;5;82m World \e[0m"
 
 
@@ -169,7 +169,7 @@ echo -e "\e[40;38;5;82m Hello \e[30;48;5;82m World \e[0m"
 
 ![image](https://github.com/A-BenMao/pure-bash-bible-zh_CN/blob/master/images/console_codes_imgs/20190619142741691.png)
 
-```
+```shell
 for i in {16..21} {21..16} ; do echo -en "\e[48;5;${i}m \e[0m" ; done ; echo
 
 
@@ -204,7 +204,7 @@ for i in {16..21} {21..16} ; do echo -en "\e[48;5;${i}m \e[0m" ; done ; echo
 
 以下 shell 脚本显示了许多可能的属性组合（但不是全部，因为它一次只使用一个格式属性）。
 
-```
+```shell
 #!/bin/bash
  
 # This program is free software. It comes without any warranty, to
@@ -236,7 +236,7 @@ exit 0
 
 以下脚本显示某些终端和终端仿真器（如 XTerm 和 GNOME Terminal）上可用的 256 种颜色。
 
-```
+```shell
 #!/bin/bash
  
 # This program is free software. It comes without any warranty, to
